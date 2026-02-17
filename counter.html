@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>count: <span id="count">0</span></h1>
+    <button onclick="countincrement()">increment</button>
+    <button onclick="countdecrement()">decrement</button>
+</body>
+<script>
+    var prev_count=localStorage.getItem("count");
+    if (prev_count==null){
+        var a=0;
+    }
+    else{
+        document.getElementById("count").innerText=prev_count;
+    }
+    function countincrement()
+    {
+        a++;
+        document.getElementById("count").innerText=a;
+        localStorage.setItem("count",a);
+    }
+     function countdecrement()
+    {
+        a--;
+        document.getElementById("count").innerText=a;
+        localStorage.setItem("count",a);
+    }
+</script>
+</html>
