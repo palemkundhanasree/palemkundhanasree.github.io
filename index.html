@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>calculator</title>
+        <style>
+            body{
+                background-image :url("https://images.pexels.com/photos/6405694/pexels-photo-6405694.jpeg?cs=srgb&dl=pexels-taryn-elliott-6405694.jpg&fm=jpg");
+                background-repeat:no-repeat;
+                background-size:cover;
+                display: flex;               
+                justify-content: center; 
+                align-items: center; 
+                flex-direction: column;
+                
+            }
+            h1{
+                text-align: center;
+                margin-bottom: 0px;
+            }
+            #outer{
+                width: 400px;
+                height: 500px;
+                border: 5px solid black;
+                border-radius: 25px;
+            }
+            #space{
+                height:75px;
+                width: 350px;
+                border: 5px solid rgb(61, 133, 174);
+                margin-left: 20px;
+                margin-top: 25px;
+                border-radius: 25px;
+                background-color:#f588b0;
+                font-size: 25PX;
+                text-align: right;
+            }
+            button{
+                padding:15px;
+                font-size:20px;
+                border-radius:25px;
+                width:65px;
+                height:50px;
+                background-color:rgb(155, 183, 225);
+                box-shadow:4px 6px 7px;
+                margin-left:25px;
+                margin-top: 25px;
+            }
+        </style>
+    </head>
+    <body name="body">
+        <h1 style="font-family: cursive;font-size:70px;">Calculator</h1>
+        <div id="outer">
+            <input type="text" id="space" disabled><div id="inputs">
+            <button onclick="total()">AC</button>
+            <button onclick="data('*')">*</button>
+            <button onclick="data('%')">%</button>
+            <button onclick="remove()">X</button><br>
+            <button onclick="data('7')">7</button>
+            <button onclick="data('8')">8</button>
+            <button onclick="data('9')">9</button>
+            <button onclick="data('/')">/</button><br>
+            <button onclick="data('4')">4</button>
+            <button onclick="data('5')">5</button>
+            <button onclick="data('6')">6</button>
+            <button onclick="data('-')">-</button><br>
+            <button onclick="data('1')">1</button>
+            <button onclick="data('2')">2</button>
+            <button onclick="data('3')">3</button>
+            <button onclick="data('+')">+</button><br>
+            <button onclick="data('00')">00</button>
+            <button onclick="data('0')">0</button>
+            <button onclick="data('.')">.</button>
+            <button onclick="calc()">=</button></div>
+        </div> 
+        <script>
+            let show=document.getElementById('space');
+            function data(x)
+            {
+                show.value += x;  
+            }
+            function total()  
+            {
+                show.value="";
+            }
+            function remove()   
+            {
+                show.value= show.value.slice(0,-1);
+            }
+            function calc()
+            {
+                try
+                {
+                    show.value=eval(show.value);
+                }
+                catch(error)
+                {
+                    show.value='invalid';
+                }
+            }
+        </script>       
+    </body>
+</html>
