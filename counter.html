@@ -9,15 +9,15 @@
     <h1>count: <span id="count">0</span></h1>
     <button onclick="countincrement()">increment</button>
     <button onclick="countdecrement()">decrement</button>
-</body>
-<script>
+    <script>
     var prev_count=localStorage.getItem("count");
     if (prev_count==null){
         var a=0;
     }
     else{
-        document.getElementById("count").innerText=prev_count;
+        var a=parseInt(prev_count);
     }
+    document.getElementById("count").innerText=a;
     function countincrement()
     {
         a++;
@@ -31,4 +31,5 @@
         localStorage.setItem("count",a);
     }
 </script>
+</body>
 </html>
