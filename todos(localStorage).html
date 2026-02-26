@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+       *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1c2942, #243b55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container{
+            background: rgba(20, 20, 30, 0.9);
+            padding: 30px;
+            width: 420px;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            color: #f5f5f5;
+        }
+        h2{
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #00f5d4;
+        }
+        #todo-input{
+            width: 65%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #1f1f2e;
+            color: white;
+            outline: none;
+            font-size: 14px;
+        }
+        #todo-input:focus{
+            border-color: #00f5d4;
+            box-shadow: 0 0 6px #00f5d4;
+        }
+        #add_btn{
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #00f5d4, #9b5de5);
+            color: black;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        #add_btn:hover:not(:disabled){
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,245,212,0.4);
+        }
+        #add_btn:disabled{
+            background: #555;
+            color: #999;
+            cursor: not-allowed;
+        }
+        ul{
+            list-style: none;
+            margin-top: 25px;
+        }
+        li{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1f1f2e;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            transition: 0.3s;
+            border: 1px solid #2c2c3a;
+        }
+        li:hover{
+            border-color: #00f5d4;
+            transform: scale(1.02);
+        }
+        li span{
+            flex: 1;
+            margin-left: 8px;
+            color: #f0f0f0;
+        }
+        li button{
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-left: 6px;
+            color: white;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+        li button:first-of-type{
+            background:linear-gradient(135deg, #00fea5, #5de581); 
+        }
+        li button:last-of-type{
+            background:linear-gradient(135deg, #fe0000, #e55d5d);
+        }
+        li button:hover:not(:disabled){
+            transform: scale(1.1);
+        }
+        li button:disabled{
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        input[type="checkbox"]{
+            width: 18px;
+            height: 18px;
+            accent-color: #00f5d4;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+   <div class="container">
+        <h2>MY TODOs</h2>
+        <input type="text" id="todo-input">
+        <button onclick="add()" id="add_btn" disabled>ADD ToDo</button>
+        <ul id="list">
+        
+        </ul>
+   </div>
+    <script>
+        var input = document.getElementById("todo-input");
+        var button = document.getElementById("add_btn");
+        input.addEventListener("input", function(){
+            if(input.value.trim()===""){
+                button.disabled=true;
+            } 
+            else {
+                button.disabled=false;
+            }
+        });
+        var edit_index=-1;
+        var prev_todos=localStorage.getItem("todos");
+        if (prev_todos==null){
+            var todos=[];
+        }
+        else{
+            var todos=JSON.parse(prev_todos);
+        }
+        window.onload = genList;
+        function genList(){
+            document.getElementById("list").innerHTML="";
+            todos.forEach((todo,index)=>{
+                var checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = todo.completed;
+                checkbox.onchange = function(){
+                    todos[index].completed = checkbox.checked;
+                    localStorage.setItem("todos", JSON.stringify(todos));
+                    genList();
+                };
+                var span = document.createElement("span");
+                span.innerText = todo.title;
+                span.style.marginLeft = "8px";
+                if(todo.completed){
+                    span.style.textDecoration = "line-through";
+                    span.style.color = "gray";
+                }
+                var list_item=document.createElement("li");
+                var del_btn=document.createElement("button");
+                del_btn.innerText="Delete";
+                del_btn.style.margin="0.5em";
+                del_btn.onclick=function(){
+                    deleteTodo(index);
+                }; 
+                var edit_btn=document.createElement("button");
+                edit_btn.innerText="Edit";
+                edit_btn.style.marginLeft="0.5em";
+                edit_btn.onclick=function(){
+                    editTodo(index);
+                };
+                if(todo.completed){
+                    edit_btn.disabled=true;
+                    del_btn.disabled=false;
+                }
+                if(!todo.completed){
+                    del_btn.disabled=true;
+                    edit_btn.disabled=false;
+                }
+                list_item.appendChild(checkbox);
+                list_item.appendChild(span);
+                list_item.appendChild(edit_btn);
+                list_item.appendChild(del_btn);
+                document.getElementById("list").appendChild(list_item);
+            })
+        }
+        function deleteTodo(index){
+            todos.splice(index,1);
+            localStorage.setItem("todos",JSON.stringify(todos));
+            genList();
+        }
+        function editTodo(index){
+            input.value=todos[index].title;
+            edit_index=index;
+            document.getElementById("add_btn").innerText="Update";
+        }
+        function add(){
+            var new_todo=document.getElementById("todo-input").value;
+            document.getElementById("add_btn").innerText="ADD ToDo";
+            if(new_todo=="") {
+                alert("enter todo");
+                return;
+            }
+            if(edit_index==-1){
+                todos.push({title:new_todo,completed:false});
+            }
+            else{
+                todos[edit_index].title=new_todo;
+                edit_index=-1;
+            }
+            localStorage.setItem("todos", JSON.stringify(todos));
+            input.value="";
+            button.disabled=true;
+            genList();
+        }
+    </script>
+</body>
+</html>
